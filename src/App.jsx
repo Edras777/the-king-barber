@@ -20,8 +20,8 @@ import LandingPage from "./pages/LandigPage";
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
+    <AuthProvider>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/reserva" element={<Home />} />
@@ -60,8 +60,8 @@ function App() {
           {/* Ruta para manejar las páginas no encontradas */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
-      </AuthProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
