@@ -151,7 +151,12 @@ export default function BitacoraCitasPage() {
         return dayjs(cellValue, { locale: "es-us" }).format(
           "dddd D [de] MMMM [del] YYYY [a las] h:mm A"
         );
-
+      case "estado":
+        if (cellValue === "CANCELADA")
+          return <span className="text-red-600 font-bold">{cellValue}</span>;
+        if (cellValue === "VENCIDA")
+          return <span className="text-yellow-500 font-bold">{cellValue}</span>;
+        return <span className="text-green-400 font-bold">{cellValue}</span>;
       default:
         return cellValue;
     }
