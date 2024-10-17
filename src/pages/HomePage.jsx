@@ -611,7 +611,9 @@ function HomePage() {
                             isInvalid={esDiaInvalido}
                             value={fechaSeleccionadaValida}
                             onChange={changeFecha}
-                            minValue={today(getLocalTimeZone())}
+                            minValue={today(getLocalTimeZone()).add({
+                              days: 1,
+                            })}
                           />
                         </I18nProvider>
                       )}
