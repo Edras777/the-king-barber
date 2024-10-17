@@ -44,6 +44,8 @@ import { today, getLocalTimeZone } from "@internationalized/date";
 import { diasDeLaSemana } from "../utils/diasDeLaSemana";
 import PinField from "react-pin-field";
 
+import ReCAPTCHA from "react-google-recaptcha";
+
 const nombreEmpresa = "THE KING BARBER";
 function HomePage() {
   const [selectedTab, setSelectedTab] = useState("step1");
@@ -115,6 +117,9 @@ function HomePage() {
   // para mostrar modal
   const [isOpenConfirmacion, setIsOpenConfirmacion] = useState(false);
 
+  // para recapcha
+  const [esValidoRecaptcha, setEsValidoRecaptcha] = useState(false);
+
   async function getServicios() {
     // reinicar todo los campos por defecto
     setIsDisabledSelectProveedores(true);
@@ -128,6 +133,7 @@ function HomePage() {
     setFechaSeleccionadaValida(null);
     setHorarioSeleccionado(["0"]);
     setHorarioDisponible([]);
+    setEsValidoRecaptcha(false);
 
     // reiniciar la tap
     setSelectedTab("step1");
@@ -482,7 +488,10 @@ function HomePage() {
                 size="md"
                 aria-label="Tabs form"
                 selectedKey={selectedTab}
-                onSelectionChange={setSelectedTab}
+                onSelectionChange={(e) => {
+                  setEsValidoRecaptcha(false);
+                  setSelectedTab(e);
+                }}
               >
                 <Tab key="step1" title="Paso uno">
                   <div className="flex flex-col gap-4">
@@ -845,16 +854,25 @@ function HomePage() {
                       {notas}
                     </div>
                   </div>
+                  <div style={{ paddingBottom: "10px" }}>
+                    <ReCAPTCHA
+                      sitekey={import.meta.env.VITE_CAPTCHA_SITE_KEY}
+                      onChange={(e) => setEsValidoRecaptcha(e !== "")}
+                    />
+                  </div>
                   <div className="flex gap-2 justify-between">
                     <Button
-                      onClick={() => setSelectedTab("step3")}
+                      onClick={() => {
+                        setEsValidoRecaptcha(false);
+                        setSelectedTab("step3");
+                      }}
                       color="primary"
                     >
                       Regresar
                     </Button>
 
                     <Button
-                      isDisabled={isLoadingButton}
+                      isDisabled={isLoadingButton || !esValidoRecaptcha}
                       color="primary"
                       type="submit"
                     >

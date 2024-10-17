@@ -20,6 +20,7 @@ import { useState } from "react";
 import { autenticar, preAutenticar } from "../../services/auth";
 
 import PinField from "react-pin-field";
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -37,6 +38,8 @@ export default function LoginPage() {
 
   const [token, setToken] = useState("");
   const [isValidToken, setIsValidToken] = useState(false);
+
+  const [esValidoRecaptcha, setEsValidoRecaptcha] = useState(false);
 
   const navigate = useNavigate();
 
@@ -146,6 +149,10 @@ export default function LoginPage() {
               isInvalid={esPasswordInvalido}
               errorMessage={passwordMensajeError}
             />
+            <ReCAPTCHA
+              sitekey={import.meta.env.VITE_CAPTCHA_SITE_KEY}
+              onChange={(e) => setEsValidoRecaptcha(e !== "")}
+            />
             <p className="text-center text-small">
               <Link to={"/recuperar"} size="sm" className="text-blue-500">
                 ¿Olvidó su contraseña?
@@ -161,7 +168,8 @@ export default function LoginPage() {
                   !username ||
                   esPasswordInvalido ||
                   !password ||
-                  isLoadingSubmit
+                  isLoadingSubmit ||
+                  !esValidoRecaptcha
                 }
               >
                 Iniciar sesión

@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { recuperarUsuario } from "../../services/usuarios";
 
 import { Link } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function RecuperarPage() {
   const [isLoadingSubmit, setisLoadingSubmit] = useState();
@@ -17,6 +18,8 @@ export default function RecuperarPage() {
   const [usuario, setUsuario] = useState("");
   const [esUsuarioinvalido, setEsUsuarioinvalido] = useState(false);
   const [usuarioMensajeError, setusUarioMensajeError] = useState(null);
+
+  const [esValidoRecaptcha, setEsValidoRecaptcha] = useState(false);
 
   const changeUsuario = (valor) => {
     if (valor.length > 40) return (valor = usuario);
@@ -96,6 +99,10 @@ export default function RecuperarPage() {
               isInvalid={esUsuarioinvalido}
               onValueChange={changeUsuario}
             />
+            <ReCAPTCHA
+              sitekey={import.meta.env.VITE_CAPTCHA_SITE_KEY}
+              onChange={(e) => setEsValidoRecaptcha(e !== "")}
+            />
             <div className="flex gap-2 justify-end">
               <Button
                 type="submit"
@@ -106,7 +113,8 @@ export default function RecuperarPage() {
                   esUsuarioinvalido ||
                   !correo ||
                   esCorreoinvalido ||
-                  isLoadingSubmit
+                  isLoadingSubmit ||
+                  !esValidoRecaptcha
                 }
               >
                 Recuparar usuario
